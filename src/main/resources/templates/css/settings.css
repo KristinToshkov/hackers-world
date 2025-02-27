@@ -1,0 +1,80 @@
+/* General Form Styling */
+.signin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.content {
+    background: #111;
+    padding: 30px;
+    border-radius: 10px;
+    border: 2px solid #00ff99;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.5);
+    justify-content: center;
+}
+
+h2 {
+    font-size: 2em;
+    color: #00ff99;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+/* Input Fields */
+.inputBox {
+    position: relative;
+    margin-bottom: 20px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.inputBox i {
+    color: #00ff99;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.inputBox input {
+    position: inherit;
+    width: 90%;
+    padding: 10px;
+    font-size: 1.2em;
+    background: #222;
+    border: 2px solid #00ff99;
+    color: #fff;
+    border-radius: 5px;
+    outline: none;
+    transition: 0.3s ease;
+    padding-left: 15px; /* Adds space on the left */
+    padding-right: 15px; /* Adds space on the right */
+}
+
+
+.inputBox input:focus {
+    background: #333;
+    border-color: #009966;
+}
+
+/* Submit Button */
+.inputBox input[type="submit"] {
+    background: #00ff99;
+    color: #0a0a0a;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    width: 80%;
+}
+
+.inputBox input[type="submit"]:hover {
+    background: #009966;
+}
+

@@ -1,0 +1,50 @@
+/* Scoreboard Styling */
+.scoreboard-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #111;
+    border: 2px solid #00ff99;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 255, 153, 0.3);
+    width: 100%;
+    max-width: 500px;
+    transition: 0.3s ease;
+}
+
+/* Hover effect */
+.scoreboard-entry:hover {
+    box-shadow: 0 0 20px rgba(0, 255, 153, 0.5);
+}
+
+/* Avatar Styling */
+.image.avatar-scoreboard img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #00ff99;
+}
+
+/* Username Styling */
+.scoreboard-entry h2 {
+    font-size: 1.5em;
+    color: #00ff99;
+    margin: 0;
+    flex: 1; /* Makes sure elements are spaced properly */
+}
+
+/* Rank Number Styling */
+.scoreboard-entry h2 span {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Centering the Scoreboard */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
