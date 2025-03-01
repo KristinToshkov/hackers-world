@@ -5,3 +5,122 @@
     justify-content: center;
     align-items: center;
 }
+
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-size: cover;
+    background: radial-gradient(circle at 90% top,
+    #2a572e 0%,
+    #294e26 10%,
+    #2d4622 20%,
+    #1e3d1d 30%,
+    #1b3419 40%,
+    #192c15 50%,
+    #142311 60%,
+    #0e1a0d 70%,
+    #081108 80%,
+    #040905 90%,
+    #000000 100%) no-repeat fixed;
+    font-style: normal;
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    padding: 2% 6%;
+}
+
+.header-inner {
+    display: flex;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-inner .nav {
+    margin-left: auto;
+}
+
+.button {
+    display: inline-block;
+    text-decoration: none;
+    appearance: none;
+    padding: 10px 15px;
+    background-color: transparent;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #09ff00;
+    transition: box-shadow 0.2s ease;
+    box-shadow: inset 0 1px 9px rgba(255, 255, 255, 0.5); /* Inset shadow with transparency */
+}
+
+.button.login:hover, .button.register:hover {
+    background: radial-gradient(circle at 90% top, #80b06a 0%, #76a461 10%, #589963 20%, #638d50 30%, #507f47 40%, #4e733f 50%, #446636 60%, #355a2d 70%, #2c4d24 80%, #1d411a 90%, #143510 100%);
+    color: white;
+    box-shadow: inset 0 1px 9px rgba(255, 255, 255, 0.8); /* Inset shadow with transparency */
+}
+
+
+.logo-big {
+    display: inline-block;
+    max-width: 700px;
+}
+
+.logo-big img {
+    display: inline-block;
+    width: 100%;
+    height: auto;
+}
+
+.footer {
+    color: rgba(255, 255, 255, 0.69);
+    text-align: center;
+    margin-top: auto;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+.alert-warning {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    background: linear-gradient(to left, #f88e8e, #f56767, #f53b3b);
+    background-size: 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+p.alert-warning {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    background: linear-gradient(to left, #f88e8e, #f56767, #f53b3b);
+    background-size: 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 5px 0 0;
+}
+

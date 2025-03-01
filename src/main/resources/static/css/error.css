@@ -1,0 +1,21 @@
+.alert-warning {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    background-size: 200%;
+    background-clip: text;
+    -webkit-text-fill-color: red;
+    margin-top: -10px;
+}
+
+p.alert-warning {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    background-size: 200%;
+    background-clip: text;
+
+    margin: 5px 0 0;
+}

@@ -1,9 +1,11 @@
 package app.web;
 
+import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.LoginRequest;
+import app.web.dto.PasswordRequest;
 import app.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,42 @@ public class IndexController {
         return modelAndView;
     }
 
+
+    @GetMapping("/forgot-password")
+    public ModelAndView getForgotPassword(@RequestParam(value = "error", required = false) String errorParam) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forgot-password");
+        modelAndView.addObject("passwordRequest", new PasswordRequest());
+
+        if (errorParam != null) {
+            modelAndView.addObject("errorMessage", "Incorrect username!");
+        }
+
+        return modelAndView;
+    }
+
+    @PostMapping("/forgot-password")
+    public ModelAndView getPassword(@Valid PasswordRequest passwordRequest, BindingResult bindingResult) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forgot-password");
+
+        if (bindingResult.hasErrors()) {
+            modelAndView.addObject("errorMessage", bindingResult.getAllErrors().get(0).getDefaultMessage());
+            return modelAndView;
+        }
+        try {
+            userService.resetPassword(passwordRequest);
+            modelAndView.addObject("successMessage", "Password has been reset!");
+            return modelAndView;
+        } catch (DomainException e) {
+                modelAndView.addObject("usernameError", e.getMessage());
+
+            return modelAndView;
+        }
+    }
+
     @GetMapping("/register")
     public ModelAndView getRegisterPage() {
 
@@ -57,15 +95,28 @@ public class IndexController {
 
     @PostMapping("/register")
     public ModelAndView registerNewUser(@Valid RegisterRequest registerRequest, BindingResult bindingResult) {
+        ModelAndView modelAndView = new ModelAndView("register");
 
+
+        // If validation fails, return register page
         if (bindingResult.hasErrors()) {
-            return new ModelAndView("register");
+            return modelAndView;
         }
 
-        userService.register(registerRequest);
-
-        return new ModelAndView("redirect:/login");
+        try {
+            userService.register(registerRequest);
+            return new ModelAndView("redirect:/login"); // Redirect on success
+        } catch (DomainException e) {
+            if (e.getMessage().contains("Username")) {
+                modelAndView.addObject("usernameError", e.getMessage());
+            }
+            if (e.getMessage().contains("Passwords do not match")) {
+                modelAndView.addObject("passwordError", e.getMessage());
+            }
+            return modelAndView;
+        }
     }
+
 
     @GetMapping("/home")
     public ModelAndView getHomePage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {

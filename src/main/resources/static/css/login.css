@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 *
 {
   margin: 0;
@@ -45,8 +45,8 @@ section::before
   {
     transform: translateY(100%);
   }
-}
-section span 
+} */
+/* section span 
 {
   position: relative;
   display: block;
@@ -60,7 +60,7 @@ section span:hover
 {
   background: #0f0;
   transition: 0s;
-}
+} */
 
 section .signin
 {
@@ -164,7 +164,7 @@ input[type="submit"]:active
 {
   opacity: 0.6;
 }
-@media (max-width: 900px)
+/* @media (max-width: 900px)
 {
   section span 
   {
@@ -179,4 +179,4 @@ input[type="submit"]:active
     width: calc(20vw - 2px);
     height: calc(20vw - 2px);
   }
-}
+} */

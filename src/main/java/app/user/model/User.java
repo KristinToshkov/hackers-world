@@ -23,13 +23,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    private String firstName;
-
-    private String lastName;
-
     private String profilePicture;
 
-    @Column(unique = true)
+
     private String email;
 
     @Column(nullable = false)
@@ -43,8 +39,5 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime createdOn;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedOn;
 
 }

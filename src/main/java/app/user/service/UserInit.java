@@ -1,9 +1,13 @@
 package app.user.service;
 
+import app.user.model.User;
+import app.user.model.UserRole;
 import app.web.dto.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 public class UserInit implements CommandLineRunner {
@@ -22,11 +26,16 @@ public class UserInit implements CommandLineRunner {
            return;
         }
 
-        RegisterRequest registerRequest = RegisterRequest.builder()
-                .username("KrisRoot")
-                .password("123123")
-                .build();
 
-        userService.register(registerRequest);
+        User user = User.builder()
+                .email("kris@gmail.com")
+                        .username("KrisRoot")
+                                .password("123123")
+                .createdOn(LocalDateTime.now())
+                .isActive(true)
+                .role(UserRole.ADMIN)
+                                        .build();
+
+        userService.initializeRootUser(user);
     }
 }
