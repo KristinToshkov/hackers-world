@@ -1,6 +1,8 @@
 package app.web.Mapper;
 
+import app.hack.model.Hack;
 import app.user.model.User;
+import app.web.dto.HackRequest;
 import app.web.dto.UserEditRequest;
 import lombok.experimental.UtilityClass;
 
@@ -16,4 +18,13 @@ public class DtoMapper {
                 .profilePicture(user.getProfilePicture())
                 .build();
     }
+
+    public static HackRequest mapHackToHackRequest(Hack hack) {
+
+        return HackRequest.builder()
+                .credits(hack.getCredits())
+                .build();
+    }
+
+
 }

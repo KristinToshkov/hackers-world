@@ -22,8 +22,8 @@
                     <p th:text="'Rank: ' + ${currentUser.userRank}">Rank</p>
                 </div>
                 <div class="action-buttons">
-                    <h2><a th:href="@{/attack/{id}(id=${currentUser.id})}">Attack</a></h2>
-                    <h2><a th:href="@{/defend/{id}(id=${currentUser.id})}">Defend</a></h2>
+                    <h2><a th:href="@{'/hack/' + ${currentUser.id}}">Attack</a></h2>
+                    <h2><a th:href="@{'/defend/' + ${currentUser.id}}">Defend</a></h2>
                 </div>
             </header>
         </div>

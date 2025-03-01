@@ -15,18 +15,18 @@
 
                                 <div class="content">
                         
-                                    <h2>Attacking <span>Username1</span></h2>
+                                    <h2>Attacking <span th:text="${user.username}">Username1</span></h2>
                         
-                                    <div class="form">
+                                    <form class="form" th:action="@{'/hack/' + ${user.id}}" th:method="POST" th:object="${userHackRequest}">
                         
                                         <div class="inputBox">
                     
                                             <i>Credit Amount</i>
-                                            <input type="text" required> 
+                                            <input type="text" th:field="*{credits}" required>
                         
                                         </div>
                                         <div class="alert-warning">
-                                            <p>Credit Amount wrong message</p>
+                                            <p th:if="${errorMessage}" th:text="${errorMessage}">Credit Amount wrong message</p>
                                         </div>
 
                                         <div class="inputBox">
@@ -35,7 +35,7 @@
                         
                                         </div>
                         
-                                    </div>
+                                    </form>
                         
                                 </div>
                         

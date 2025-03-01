@@ -32,6 +32,7 @@ public class UserInit implements CommandLineRunner {
                 .username("KrisRoot")
                 .password("123123")
                 .createdOn(LocalDateTime.now())
+                .credits(999)
                 .userRank(999)
                 .isActive(true)
                 .role(UserRole.ADMIN)

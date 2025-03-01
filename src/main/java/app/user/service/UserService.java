@@ -76,9 +76,18 @@ public class UserService implements UserDetailsService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(UserRole.USER)
                 .isActive(true)
+                .credits(0)
                 .userRank(0)
                 .createdOn(LocalDateTime.now())
                 .build();
+    }
+
+    public void decreaseCredits(User user, int amount) {
+        user.setCredits(user.getCredits() - amount);
+    }
+
+    public void increaseCredits(User user, int amount) {
+        user.setCredits(user.getCredits() + amount);
     }
 
     public void initializeRootUser(User user) {
@@ -90,6 +99,7 @@ public class UserService implements UserDetailsService {
                 .role(user.getRole())
                 .isActive(user.isActive())
                 .userRank(user.getUserRank())
+                .credits(user.getCredits())
                 .createdOn(user.getCreatedOn())
                 .build();
 
@@ -183,5 +193,9 @@ public class UserService implements UserDetailsService {
     public void logoutUser() {
         SecurityContextHolder.clearContext();
         log.info("User logged out. Cache cleared.");
+    }
+
+    public User getByUsername(String username) {
+        return userRepository.getUsersByUsername(username);
     }
 }

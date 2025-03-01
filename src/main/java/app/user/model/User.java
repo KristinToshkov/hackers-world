@@ -33,6 +33,11 @@ public class User {
 
     private Integer userRank;
 
+    private Integer credits;
+
+    @OneToOne
+    private User defense;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
