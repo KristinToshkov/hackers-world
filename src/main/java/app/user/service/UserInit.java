@@ -29,12 +29,13 @@ public class UserInit implements CommandLineRunner {
 
         User user = User.builder()
                 .email("kris@gmail.com")
-                        .username("KrisRoot")
-                                .password("123123")
+                .username("KrisRoot")
+                .password("123123")
                 .createdOn(LocalDateTime.now())
+                .userRank(999)
                 .isActive(true)
                 .role(UserRole.ADMIN)
-                                        .build();
+                .build();
 
         userService.initializeRootUser(user);
     }

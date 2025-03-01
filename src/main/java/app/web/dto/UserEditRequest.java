@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.URL;
 public class UserEditRequest {
 
 
-    @Size(min = 6, message = "Username must be at least 6 symbols")
+    @Pattern(regexp = "(^$|.{6,})", message = "Username must be at least 6 symbols")
     private String username;
 
     @Pattern(regexp = "(^$|.{6,})", message = "Password must be at least 6 symbols")

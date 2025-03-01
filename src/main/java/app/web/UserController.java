@@ -1,6 +1,7 @@
 package app.web;
 
 
+import app.exception.DomainException;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.Mapper.DtoMapper;
@@ -52,7 +53,17 @@ public class UserController {
             return modelAndView;
         }
 
-        userService.editUserDetails(id, userEditRequest);
+        try {
+            userService.editUserDetails(id, userEditRequest);
+        } catch (DomainException e) {
+            User user = userService.getById(id);
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("settings");
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("userEditRequest", userEditRequest);
+            modelAndView.addObject("usernameError", e.getMessage());
+            return modelAndView;
+        }
         return new ModelAndView("redirect:/home");
     }
 }

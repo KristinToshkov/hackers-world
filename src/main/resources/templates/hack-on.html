@@ -8,72 +8,27 @@
 	</head>
 	<body>
 
-		<!-- Header -->
-			<div id="header">
-					<!-- Logo -->
-						<div id="profile-details">
-							<span class="image avatar48"><img src="images/default-avatar.png" alt="" /></span>
-							<h1 id="title">Username</h1>
-							<p>Rank</p>
-						</div>
-
-					<!-- Nav -->
-						<nav id="nav">
-							<ul>
-								<li><a href="hack-on.html">Hack On</a></li>
-								<li><a href="credits.html">Credits</a></li>
-								<li><a href="history.html">History</a></li>
-								<li><a href="settings.html">Settings</a></li>
-								<li><a href="scoreboard.html">Scoreboard</a></li>
-								<li><a href="index.html">Logout</a></li>
-							</ul>
-						</nav>
-			</div>
+	<th:block th:insert="fragments/menu :: menu"></th:block>
 
 
-			<div id="main">
-						<div class="container">
-							<header>
-								<div id="profile-details">
-                                    <span class="image avatar48"><img src="images/default-avatar.png" alt="" /></span>
-                                    <h1 id="title">Username</h1>
-                                    <p>Rank</p>
-                                </div>
-                                <div class="action-buttons">
-                                    <h2><a href="attack.html">Attack</a></h2>
-                                    <h2><a href="">Defend</a></h2>
-                                </div>
-							</header>
-						</div>
-                        <div class="container">
-							<header>
-								<div id="profile-details">
-                                    <span class="image avatar48"><img src="images/default-avatar.png" alt="" /></span>
-                                    <h1 id="title">Username</h1>
-                                    <p>Rank</p>
-                                </div>
-                                <div class="action-buttons">
-                                    <h2><a href="attack.html">Attack</a></h2>
-                                    <h2><a href="">Defend</a></h2>
-                                </div>
-							</header>
-						</div>
-                        <div class="container">
-							<header>
-								<div id="profile-details">
-                                    <span class="image avatar48"><img src="images/default-avatar.png" alt="" /></span>
-                                    <h1 id="title">Username</h1>
-                                    <p>Rank</p>
-                                </div>
-                                <div class="action-buttons">
-                                    <h2><a href="attack.html">Attack</a></h2>
-                                    <h2><a href="">Defend</a></h2>
-                                </div>
-							</header>
-						</div>
-                        
-					</section>
-					</div>
+    <div id="main">
+        <div th:each="currentUser : ${allUsers}" class="container">
+            <header>
+                <div id="profile-details">
+                <span class="image avatar48">
+                    <img th:src="${currentUser.profilePicture != null ? currentUser.profilePicture : 'images/default-avatar.png'}" alt="Profile Picture"/>
+                </span>
+                    <h1 id="title" th:text="${currentUser.username}">Username</h1>
+                    <p th:text="'Rank: ' + ${currentUser.userRank}">Rank</p>
+                </div>
+                <div class="action-buttons">
+                    <h2><a th:href="@{/attack/{id}(id=${currentUser.id})}">Attack</a></h2>
+                    <h2><a th:href="@{/defend/{id}(id=${currentUser.id})}">Defend</a></h2>
+                </div>
+            </header>
+        </div>
+    </div>
 
-	</body>
+
+    </body>
 </html>

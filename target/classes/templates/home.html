@@ -9,33 +9,14 @@
 	<body>
 
 		<!-- Header -->
-			<div id="header">
-					<!-- Logo -->
-						<div id="profile-details">
-							<span class="image avatar48"><img th:src="${#strings.isEmpty(user.profilePicture) ? 'images/default-avatar.png' : user.profilePicture}" alt="" /></span>
-							<h1 id="title" th:text="${user.username}">Username</h1>
-							<p >Rank</p>
-						</div>
-
-					<!-- Nav -->
-						<nav id="nav">
-							<ul>
-								<li><a href="hack-on.html">Hack On</a></li>
-								<li><a href="credits.html">Credits</a></li>
-								<li><a href="history.html">History</a></li>
-								<li><a th:href="@{'/users/' + ${user.id} + '/profile'}">Settings</a></li>
-								<li><a href="scoreboard.html">Scoreboard</a></li>
-								<li><a href="/logout">Logout</a></li>
-							</ul>
-						</nav>
-			</div>
+		<th:block th:insert="fragments/menu :: menu"></th:block>
 
 
 			<div id="main">
 						<div class="container">
 							<header>
 								<h2 class="alt">Hello, <strong th:text="${user.getUsername()}">Username</strong></h2>
-								<h2>Ready for some action?</h2>
+								<h2 th:text="${message}">Ready for some action?</h2>
 							</header>
 						</div>
 					</section>

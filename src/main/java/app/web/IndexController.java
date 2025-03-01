@@ -1,5 +1,6 @@
 package app.web;
 
+import app.Message.WelcomeMessage;
 import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+import java.util.Random;
 
 @Controller
 public class IndexController {
@@ -127,6 +131,26 @@ public class IndexController {
         modelAndView.setViewName("home");
         modelAndView.addObject("user", user);
 
+        //Get a random welcoming message with each load of the home page
+        WelcomeMessage[] values = WelcomeMessage.values();
+        Random r = new Random();
+        String message = values[r.nextInt(values.length)].getMessage();
+        modelAndView.addObject("message", message);
+
+        return modelAndView;
+    }
+
+    @GetMapping("/hack-on")
+    public ModelAndView getHackPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        User user = userService.getById(authenticationMetadata.getUserId());
+        List<User> allUsers = userService.getAllUsers();
+        allUsers.removeIf(u -> u.getId().equals(user.getId()));
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("hack-on");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("allUsers", allUsers);
         return modelAndView;
     }
 }

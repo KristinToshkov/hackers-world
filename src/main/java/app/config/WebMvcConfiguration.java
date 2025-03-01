@@ -1,5 +1,7 @@
 package app.config;
 
+import app.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableMethodSecurity
 public class WebMvcConfiguration implements WebMvcConfigurer {
+    @Autowired
+    private UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,7 +40,10 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            userService.logoutUser();  // Call method to clear cache
+                            response.sendRedirect("/");  // Redirect after clearing cache
+                        })
                 );
 
         return http.build();

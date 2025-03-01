@@ -34,7 +34,7 @@
                     
                                             <i>E-mail</i>
                                             <input type="text" th:field="*{email}">
-                        
+
                                         </div>
                                         <div class="alert-warning">
                                             <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email wrong message</p>
@@ -43,11 +43,12 @@
                                         <div class="inputBox">
                     
                                             <i>Username</i>
-                                            <input type="text" th:field="*{username}" required>
+                                            <input type="text" th:field="*{username}">
                         
                                         </div>
                                         <div class="alert-warning">
                                             <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username wrong message</p>
+                                            <p th:text="${usernameError}">Username wrong message</p>
                                         </div>
 
                                         <div class="inputBox">

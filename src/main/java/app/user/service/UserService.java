@@ -9,11 +9,15 @@ import app.user.repository.UserRepository;
 import app.web.dto.PasswordRequest;
 import app.web.dto.RegisterRequest;
 import app.web.dto.UserEditRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -72,6 +76,7 @@ public class UserService implements UserDetailsService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(UserRole.USER)
                 .isActive(true)
+                .userRank(0)
                 .createdOn(LocalDateTime.now())
                 .build();
     }
@@ -84,6 +89,7 @@ public class UserService implements UserDetailsService {
                 .password(passwordEncoder.encode(user.getPassword()))
                 .role(user.getRole())
                 .isActive(user.isActive())
+                .userRank(user.getUserRank())
                 .createdOn(user.getCreatedOn())
                 .build();
 
@@ -95,7 +101,9 @@ public class UserService implements UserDetailsService {
     @Cacheable("users")
     public List<User> getAllUsers() {
 
+        log.info("Contacted DB");
         return userRepository.findAll();
+
     }
 
     public User getById(UUID id) {
@@ -157,11 +165,23 @@ public class UserService implements UserDetailsService {
     public void editUserDetails(@Valid UUID id, UserEditRequest userEditRequest) {
         Optional<User> byId = userRepository.findById(id);
         User user = byId.orElseThrow(() -> new DomainException("User with this username does not exist."));
-        user.setUsername(userEditRequest.getUsername());
+        if(!userEditRequest.getUsername().isEmpty())
+            user.setUsername(userEditRequest.getUsername());
+
         user.setEmail(userEditRequest.getEmail());
         if(!Objects.equals(userEditRequest.getPassword(), ""))
             user.setPassword(passwordEncoder.encode(userEditRequest.getPassword()));
         user.setProfilePicture(userEditRequest.getProfilePicture());
+        try {
         userRepository.save(user);
+    }catch (Exception e) {
+        throw new DomainException("Username is taken");
+    }
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    public void logoutUser() {
+        SecurityContextHolder.clearContext();
+        log.info("User logged out. Cache cleared.");
     }
 }
