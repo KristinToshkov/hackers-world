@@ -18,12 +18,6 @@ public class OffenseUpgrade {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    private Double multiplier;
-
     @OneToOne
     private User owner;
-
-    @Column(nullable = false)
-    private Double price;
 }

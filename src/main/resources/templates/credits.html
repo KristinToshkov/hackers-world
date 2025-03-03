@@ -16,7 +16,10 @@
 								<div id="profile-details">
                                     <h1 id="title">Available Credits:<p th:text="${user.credits}">50</p></h1>
                                     <h1 id="title">Current Defense:<p th:text="${user.defense?.username ?: 'None'}">Username1</p></h1>
-                                </div>
+									<h1 id="title" th:if="${user.defenseUpgrade != null}">
+										Defense Upgrade Uses Left:
+										<span  th:text="${user.defenseUpgrade.uses}"></span>
+									</h1>                                </div>
 							</header>
                             <p class="insuff-credits" th:if="${error}" th:text="${error}">Not enough credits!</p>
                             <a href="/rank-up">Rank Up</a>

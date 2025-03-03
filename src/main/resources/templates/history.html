@@ -16,17 +16,25 @@
 		<div class="container">
 			<header>
 				<div th:each="hack : ${hacks}" class="history-entry">
-					<h2 th:if="${hack.attacker.id == user.id}"
-						th:text="'You attacked ' + ${hack.defender.username} + ' and '
-                    + (${hack.status == T(app.hack.model.HackStatus).Defended} ? 'they defended!'
-                    : ('stole ' + ${hack.credits} + ' credits!'))">
+					<h2 th:if="${hack.attacker.id == user.id and hack.status == hackStatusDefended}"
+						th:text="'You attacked ' + ${hack.defender.username} + ' and they defended!'">
 					</h2>
 
-					<h2 th:if="${hack.defender.id == user.id}"
-						th:text="${hack.status == T(app.hack.model.HackStatus).Defended}
-        ? ${hack.attacker.username} + ' attacked you, but you defended!'
-        : ${hack.attacker.username} + ' attacked you and stole ' + ${hack.credits} + ' credits!'">
+					<h2 th:if="${hack.attacker.id == user.id and hack.status != hackStatusDefended}"
+						th:text="'You attacked ' + ${hack.defender.username} + ' and stole ' + ${hack.credits} + ' credits!'">
 					</h2>
+
+
+
+
+					<h2 th:if="${hack.defender.id == user.id and hack.status == hackStatusDefended}"
+						th:text="${hack.attacker.username} + ' attacked you, but you defended!'">
+					</h2>
+
+					<h2 th:if="${hack.defender.id == user.id and hack.status != hackStatusDefended}"
+						th:text="${hack.attacker.username} + ' attacked you and stole ' + ${hack.credits} + ' credits!'">
+					</h2>
+
 				</div>
 			</header>
 		</div>

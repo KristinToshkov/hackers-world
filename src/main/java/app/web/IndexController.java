@@ -167,4 +167,14 @@ public class IndexController {
         log.info("Passing view with all users");
         return modelAndView;
     }
+
+    @GetMapping("/upgrades")
+    public ModelAndView getUpgradePage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("upgrades");
+        User user = userService.getByUsername(authenticationMetadata.getUsername());
+        modelAndView.addObject("user", user);
+        return modelAndView;
+    }
 }

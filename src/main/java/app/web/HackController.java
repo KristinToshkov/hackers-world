@@ -2,6 +2,7 @@ package app.web;
 
 import app.exception.DomainException;
 import app.hack.model.Hack;
+import app.hack.model.HackStatus;
 import app.hack.service.HackService;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
@@ -115,6 +116,7 @@ public class HackController {
         modelAndView.addObject("user", user);
         List<Hack> hacks = hackService.getUserHistory(user);
         modelAndView.addObject("hacks", hacks);
+        modelAndView.addObject("hackStatusDefended", HackStatus.Defended);
         return modelAndView;
     }
 }

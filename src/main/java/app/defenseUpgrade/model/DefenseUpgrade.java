@@ -21,9 +21,5 @@ public class DefenseUpgrade {
     @OneToOne
     private User owner;
 
-    @ManyToOne
-    private User defense;
-
-    @Column(nullable = false)
-    private Double price;
+    private int uses;
 }

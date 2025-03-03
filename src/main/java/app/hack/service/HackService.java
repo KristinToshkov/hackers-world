@@ -1,8 +1,10 @@
 package app.hack.service;
 
+import app.defenseUpgrade.service.DefenseUpgradeService;
 import app.hack.model.Hack;
 import app.hack.model.HackStatus;
 import app.hack.repository.HackRepository;
+import app.offenseUpgrade.service.OffenseUpgradeService;
 import app.user.model.User;
 import app.user.repository.UserRepository;
 import app.user.service.UserService;
@@ -21,11 +23,15 @@ public class HackService {
 
     private final HackRepository hackRepository;
     private final UserRepository userRepository;
+    private final OffenseUpgradeService offenseUpgradeService;
+    private final DefenseUpgradeService defenseUpgradeService;
 
     @Autowired
-    public HackService(HackRepository hackRepository, UserRepository userRepository) {
+    public HackService(HackRepository hackRepository, UserRepository userRepository, OffenseUpgradeService offenseUpgradeService, DefenseUpgradeService defenseUpgradeService) {
         this.hackRepository = hackRepository;
         this.userRepository = userRepository;
+        this.offenseUpgradeService = offenseUpgradeService;
+        this.defenseUpgradeService = defenseUpgradeService;
     }
 
     @Transactional
@@ -34,7 +40,14 @@ public class HackService {
         if(defender.getDefense() == attacker) {
             hack.status(HackStatus.Defended);
             hackRepository.save(hack.build());
-        } else {
+        } else if (defender.getDefenseUpgrade() != null) {
+            defenseUpgradeService.decreaseUses(defender.getDefenseUpgrade(), defender);
+            hack.status(HackStatus.Defended);
+            hackRepository.save(hack.build());
+        }
+        else {
+            if(attacker.getOffenseUpgrade() != null)
+                credits = offenseUpgradeService.calculateCredits(credits);
             if(credits > defender.getCredits()) {
                 hack.credits(defender.getCredits());
                 attacker.setCredits(attacker.getCredits() + defender.getCredits());
@@ -49,7 +62,6 @@ public class HackService {
             hackRepository.save(build);
             userRepository.save(attacker);
             userRepository.save(defender);
-
         }
     }
 

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Hackers World</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/css/commons.css" />
+        <link rel="stylesheet" href="/css/error.css">
+	</head>
+	<body>
+
+	<th:block th:insert="fragments/menu :: menu"></th:block>
+
+
+    <div id="main">
+        <div class="container">
+            <header>
+                <div id="profile-details">
+                <span class="image avatar48">
+                    <img th:src="'images/defense-upgrade.png'" alt="Profile Picture"/>
+                </span>
+                    <h1 id="title" >Defense Upgrade</h1>
+                    <p th:text="${'Price: ' + @environment.getProperty('app.defenseUpgrade.price')}">200</p>
+                </div>
+                <div class="alert-warning">
+                    <p th:if="${errorDefenseUpgrade}" th:text="${errorDefenseUpgrade}">Error message</p>
+                </div>
+                <div class="action-buttons">
+                    <h2><a href="/buy-defense-upgrade">Buy</a></h2>
+                </div>
+            </header>
+        </div>
+
+        <div class="container">
+            <header>
+                <div id="profile-details">
+                <span class="image avatar48">
+                    <img th:src="'images/offense-upgrade.png'" alt="Profile Picture"/>
+                </span>
+                    <h1 id="title" >Offense Upgrade</h1>
+                    <p th:text="${'Price: ' + @environment.getProperty('app.offenseUpgrade.price')}">250</p>
+                </div>
+                <div class="alert-warning">
+                    <p th:if="${errorOffenseUpgrade}" th:text="${errorOffenseUpgrade}">Error message</p>
+                </div>
+                <div class="action-buttons">
+                    <h2><a href="/buy-offense-upgrade">Buy</a></h2>
+                </div>
+            </header>
+        </div>
+    </div>
+
+
+    </body>
+</html>
