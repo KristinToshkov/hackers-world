@@ -5,6 +5,7 @@ import app.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -27,5 +28,7 @@ public class Transaction {
     private Double credits;
 
     private String description;
+
+    private LocalDateTime createdOn;
 
 }

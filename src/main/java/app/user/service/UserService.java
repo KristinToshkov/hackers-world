@@ -2,6 +2,8 @@ package app.user.service;
 
 import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
+import app.transaction.model.TransactionType;
+import app.transaction.service.TransactionService;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.repository.UserRepository;
@@ -38,16 +40,18 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TransactionService transactionService;
 
     @Autowired
     private CacheManager cacheManager;
 
     @Autowired
     public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder, TransactionService transactionService) {
 
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.transactionService = transactionService;
     }
 
     @CacheEvict(value = "users", allEntries = true)
@@ -224,7 +228,7 @@ public class UserService implements UserDetailsService {
 
         if (cacheManager != null) {
             for (String cacheName : cacheManager.getCacheNames()) {
-                cacheManager.getCache(cacheName).clear();
+                Objects.requireNonNull(cacheManager.getCache(cacheName)).clear();
             }
         }
 
@@ -239,6 +243,7 @@ public class UserService implements UserDetailsService {
     public void rankUpUser(User user) {
         if(user.getCredits() >= 50) {
             user.setCredits(user.getCredits() - 50);
+            transactionService.createTransaction(user, 50.0, "Rank Up", TransactionType.SEND);
             user.setUserRank(user.getUserRank() + 1);
             userRepository.save(user);
         } else throw new DomainException("You need 50 credits to rank up!");

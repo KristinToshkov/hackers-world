@@ -7,8 +7,11 @@ import app.user.model.User;
 import app.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -28,7 +31,15 @@ public class TransactionService {
     }
 
     public void createTransaction(User user, Double credits, String description, TransactionType transactionType) {
-        Transaction transaction = Transaction.builder().user(user).credits(credits).description(description).transactionType(transactionType).build();
+        if(credits <= 0) {
+            return;
+        }
+        Transaction transaction = Transaction.builder().user(user).credits(credits).description(description).transactionType(transactionType).createdOn(LocalDateTime.now()).build();
         transactionRepository.save(transaction);
+    }
+
+    @Cacheable("allTransactions")
+    public List<Transaction> getAllTransactions() {
+        return transactionRepository.findAll();
     }
 }

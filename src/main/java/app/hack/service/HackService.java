@@ -5,6 +5,8 @@ import app.hack.model.Hack;
 import app.hack.model.HackStatus;
 import app.hack.repository.HackRepository;
 import app.offenseUpgrade.service.OffenseUpgradeService;
+import app.transaction.model.TransactionType;
+import app.transaction.service.TransactionService;
 import app.user.model.User;
 import app.user.repository.UserRepository;
 import app.user.service.UserService;
@@ -25,13 +27,15 @@ public class HackService {
     private final UserRepository userRepository;
     private final OffenseUpgradeService offenseUpgradeService;
     private final DefenseUpgradeService defenseUpgradeService;
+    private final TransactionService transactionService;
 
     @Autowired
-    public HackService(HackRepository hackRepository, UserRepository userRepository, OffenseUpgradeService offenseUpgradeService, DefenseUpgradeService defenseUpgradeService) {
+    public HackService(HackRepository hackRepository, UserRepository userRepository, OffenseUpgradeService offenseUpgradeService, DefenseUpgradeService defenseUpgradeService, TransactionService transactionService) {
         this.hackRepository = hackRepository;
         this.userRepository = userRepository;
         this.offenseUpgradeService = offenseUpgradeService;
         this.defenseUpgradeService = defenseUpgradeService;
+        this.transactionService = transactionService;
     }
 
     @Transactional
@@ -49,14 +53,14 @@ public class HackService {
             if(attacker.getOffenseUpgrade() != null)
                 credits = offenseUpgradeService.calculateCredits(credits);
             if(credits > defender.getCredits()) {
-                hack.credits(defender.getCredits());
-                attacker.setCredits(attacker.getCredits() + defender.getCredits());
-                defender.setCredits((double) 0);
-            } else {
+                credits = defender.getCredits();
+            }
                 defender.setCredits(defender.getCredits() - credits);
                 attacker.setCredits(attacker.getCredits() + credits);
                 hack.credits(credits);
-            }
+
+            transactionService.createTransaction(attacker,credits, "Hack", TransactionType.RECEIVE);
+            transactionService.createTransaction(defender,credits, "Hack", TransactionType.SEND);
             hack.status(HackStatus.Succeeded);
             Hack build = hack.build();
             hackRepository.save(build);
