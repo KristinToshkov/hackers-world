@@ -1,5 +1,7 @@
 package app.user.model;
 
+import app.defenseUpgrade.model.DefenseUpgrade;
+import app.offenseUpgrade.model.OffenseUpgrade;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,9 +35,10 @@ public class User {
 
     private Integer userRank;
 
-    private Integer credits;
+    private Double credits;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true, unique = false)
     private User defense;
 
     @Enumerated(EnumType.STRING)
@@ -46,5 +49,11 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime createdOn;
+
+    @OneToOne
+    private DefenseUpgrade defenseUpgrade;
+
+    @OneToOne
+    private OffenseUpgrade offenseUpgrade;
 
 }

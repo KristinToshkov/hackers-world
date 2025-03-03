@@ -1,16 +1,15 @@
-package app.hack.repository;
+package app.defenseUpgrade.repository;
 
+import app.defenseUpgrade.model.DefenseUpgrade;
 import app.hack.model.Hack;
 import app.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface HackRepository extends JpaRepository<Hack, UUID> {
+public interface DefenseUpgradeRepository extends JpaRepository<DefenseUpgrade, UUID> {
 
-    List<Hack> findByAttackerOrDefenderOrderByCreatedOnDesc(User attacker, User defender);
 }

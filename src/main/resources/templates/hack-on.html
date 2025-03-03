@@ -12,11 +12,11 @@
 
 
     <div id="main">
-        <div th:each="currentUser : ${allUsers}" class="container">
+        <div th:each="currentUser : ${allUsersExceptMe}" class="container">
             <header>
                 <div id="profile-details">
                 <span class="image avatar48">
-                    <img th:src="${currentUser.profilePicture != null ? currentUser.profilePicture : 'images/default-avatar.png'}" alt="Profile Picture"/>
+                    <img th:src="${#strings.isEmpty(currentUser.profilePicture) ? 'images/default-avatar.png' : currentUser.profilePicture}" alt="Profile Picture"/>
                 </span>
                     <h1 id="title" th:text="${currentUser.username}">Username</h1>
                     <p th:text="'Rank: ' + ${currentUser.userRank}">Rank</p>

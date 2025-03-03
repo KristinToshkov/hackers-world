@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Slf4j
 @Service
 public class HackService {
@@ -24,21 +27,23 @@ public class HackService {
         this.hackRepository = hackRepository;
         this.userRepository = userRepository;
     }
+
     @Transactional
-    public void createNewHack(User attacker, User defender, Integer credits) {
-        Hack.HackBuilder hack = Hack.builder().attacker(attacker).defender(defender);
+    public void createNewHack(User attacker, User defender, Double credits) {
+        Hack.HackBuilder hack = Hack.builder().attacker(attacker).defender(defender).createdOn(LocalDateTime.now());
         if(defender.getDefense() == attacker) {
             hack.status(HackStatus.Defended);
             hackRepository.save(hack.build());
         } else {
             if(credits > defender.getCredits()) {
-                defender.setCredits(0);
+                hack.credits(defender.getCredits());
                 attacker.setCredits(attacker.getCredits() + defender.getCredits());
+                defender.setCredits((double) 0);
             } else {
                 defender.setCredits(defender.getCredits() - credits);
                 attacker.setCredits(attacker.getCredits() + credits);
+                hack.credits(credits);
             }
-            hack.credits(credits);
             hack.status(HackStatus.Succeeded);
             Hack build = hack.build();
             hackRepository.save(build);
@@ -53,5 +58,10 @@ public class HackService {
     {
         if(currentUser != defenseUser)
             currentUser.setDefense(defenseUser);
+    }
+
+    public List<Hack> getUserHistory(User user) {
+        return hackRepository.findByAttackerOrDefenderOrderByCreatedOnDesc(user, user);
+
     }
 }

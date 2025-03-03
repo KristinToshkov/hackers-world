@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Hackers World</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="/css/commons.css" />
@@ -15,12 +14,12 @@
 						<div class="container-large">
 							<header>
 								<div id="profile-details">
-                                    <h1 id="title">Available Credits:<p>50</p></h1>
-                                    <h1 id="title">Current Defense:<p>Username1</p></h1>
+                                    <h1 id="title">Available Credits:<p th:text="${user.credits}">50</p></h1>
+                                    <h1 id="title">Current Defense:<p th:text="${user.defense?.username ?: 'None'}">Username1</p></h1>
                                 </div>
 							</header>
-                            <p class="insuff-credits">Not enough credits!</p>
-                            <a href="">Rank Up</a>
+                            <p class="insuff-credits" th:if="${error}" th:text="${error}">Not enough credits!</p>
+                            <a href="/rank-up">Rank Up</a>
 						</div>
                         
 					</div>

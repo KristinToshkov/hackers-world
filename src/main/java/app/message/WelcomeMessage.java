@@ -1,4 +1,4 @@
-package app.Message;
+package app.message;
 
 import lombok.Getter;
 

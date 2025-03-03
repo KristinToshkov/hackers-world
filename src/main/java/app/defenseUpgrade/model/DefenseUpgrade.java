@@ -1,10 +1,10 @@
-package app.hack.model;
+package app.defenseUpgrade.model;
+
 
 import app.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -13,22 +13,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Hack {
+public class DefenseUpgrade {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
-    private User attacker;
+    @OneToOne
+    private User owner;
 
     @ManyToOne
-    private User defender;
-
-    private Double credits;
-
-    @Enumerated(EnumType.STRING)
-    private HackStatus status;
+    private User defense;
 
     @Column(nullable = false)
-    private LocalDateTime createdOn;
+    private Double price;
 }

@@ -1,7 +1,9 @@
 package app.web;
 
 import app.exception.DomainException;
+import app.hack.model.Hack;
 import app.hack.service.HackService;
+import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.Mapper.DtoMapper;
@@ -20,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -45,7 +48,7 @@ public class HackController {
     }
 
     @PostMapping("/hack/{id}")
-    public ModelAndView attackUser(@PathVariable UUID id, @Valid HackRequest userHackRequest, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails) {
+    public ModelAndView attackUser(@PathVariable UUID id, @Valid HackRequest userHackRequest, BindingResult bindingResult, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         if (bindingResult.hasErrors()) {
             log.info("Hack request validation error for " + userHackRequest.getCredits() + " credits");
@@ -59,18 +62,59 @@ public class HackController {
         }
 
             User defender = userService.getById(id);
-        User attacker = userService.getByUsername(userDetails.getUsername());
+        User attacker = userService.getByUsername(authenticationMetadata.getUsername());
         hackService.createNewHack(attacker, defender, userHackRequest.getCredits());
 
         return new ModelAndView("redirect:/hack-on");
     }
 
     @GetMapping("/defend/{id}")
-    public ModelAndView defendUser(@PathVariable UUID id, @AuthenticationPrincipal UserDetails userDetails) {
-        String usernameOfSession = userDetails.getUsername();
+    public ModelAndView defendUser(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        String usernameOfSession = authenticationMetadata.getUsername();
         User userOfSession = userService.getByUsername(usernameOfSession);
         User userToDefend = userService.getById(id);
         hackService.changeUserDefense(userOfSession, userToDefend);
         return new ModelAndView("redirect:/hack-on");
+    }
+
+    @GetMapping("/credits")
+    public ModelAndView getCreditsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        String username = authenticationMetadata.getUsername();
+        User user = userService.getByUsername(username);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("credits");
+        modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
+    @GetMapping("/rank-up")
+    public ModelAndView rankUp(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        String username = authenticationMetadata.getUsername();
+        User user = userService.getByUsername(username);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("credits");
+        modelAndView.addObject("user", user);
+        try {
+            userService.rankUpUser(user);
+        } catch (DomainException e) {
+            modelAndView.addObject("error", e.getMessage());
+        }
+        return modelAndView;
+    }
+
+    @GetMapping("/history")
+    public ModelAndView getHistory(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        String username = authenticationMetadata.getUsername();
+        User user = userService.getByUsername(username);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("history");
+        modelAndView.addObject("user", user);
+        List<Hack> hacks = hackService.getUserHistory(user);
+        modelAndView.addObject("hacks", hacks);
+        return modelAndView;
     }
 }

@@ -1,6 +1,6 @@
 package app.web;
 
-import app.Message.WelcomeMessage;
+import app.message.WelcomeMessage;
 import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
@@ -9,6 +9,7 @@ import app.web.dto.LoginRequest;
 import app.web.dto.PasswordRequest;
 import app.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 import java.util.Random;
 
+
+@Slf4j
 @Controller
 public class IndexController {
 
@@ -144,13 +147,24 @@ public class IndexController {
     public ModelAndView getHackPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.getById(authenticationMetadata.getUserId());
-        List<User> allUsers = userService.getAllUsers();
-        allUsers.removeIf(u -> u.getId().equals(user.getId()));
-
+        List<User> allUsersExceptMe = userService.getAllUsersExceptMe(authenticationMetadata.getUsername());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("hack-on");
         modelAndView.addObject("user", user);
+        modelAndView.addObject("allUsersExceptMe", allUsersExceptMe);
+        return modelAndView;
+    }
+
+    @GetMapping("/scoreboard")
+    public ModelAndView getScoreboard(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("scoreboard");
+        List<User> allUsers = userService.getAllUsersOrdered();
+        User user = userService.getByUsername(authenticationMetadata.getUsername());
         modelAndView.addObject("allUsers", allUsers);
+        modelAndView.addObject("user", user);
+        log.info("Passing view with all users");
         return modelAndView;
     }
 }

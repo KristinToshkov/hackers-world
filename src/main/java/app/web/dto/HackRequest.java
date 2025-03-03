@@ -15,6 +15,6 @@ public class HackRequest {
 
     @Min(value = 1, message = "Minimum amount is 1")
     @Max(value = 50, message = "Maximum amount is 50")
-    private Integer credits;
+    private Double credits;
 
 }

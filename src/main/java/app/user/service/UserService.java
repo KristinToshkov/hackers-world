@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,6 +38,9 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -76,7 +80,7 @@ public class UserService implements UserDetailsService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(UserRole.USER)
                 .isActive(true)
-                .credits(0)
+                .credits((double) 0)
                 .userRank(0)
                 .createdOn(LocalDateTime.now())
                 .build();
@@ -112,7 +116,33 @@ public class UserService implements UserDetailsService {
     public List<User> getAllUsers() {
 
         log.info("Contacted DB");
-        return userRepository.findAll();
+        return userRepository.findAllByisActiveTrue();
+
+    }
+
+    @Cacheable("usersOrdered")
+    public List<User> getAllUsersOrdered() {
+
+        log.info("Contacted DB");
+        return userRepository.findAllByisActiveTrueOrderByUserRankDesc();
+
+    }
+
+    @Cacheable("userHistory")
+    public List<User> getUserHistory(String username) {
+
+        log.info("Contacted DB");
+        return userRepository.findAllByisActiveTrueOrderByUserRankDesc();
+
+    }
+
+    @Cacheable("usersExceptMe")
+    public List<User> getAllUsersExceptMe(String username) {
+
+        log.info("Contacted DB");
+        List<User> all = userRepository.findAll();
+        all.removeIf(u -> u.getUsername().equals(username));
+        return all;
 
     }
 
@@ -189,13 +219,28 @@ public class UserService implements UserDetailsService {
     }
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public void logoutUser() {
         SecurityContextHolder.clearContext();
-        log.info("User logged out. Cache cleared.");
+
+        if (cacheManager != null) {
+            for (String cacheName : cacheManager.getCacheNames()) {
+                cacheManager.getCache(cacheName).clear();
+            }
+        }
+
+        log.info("User logged out. All caches cleared.");
     }
 
     public User getByUsername(String username) {
         return userRepository.getUsersByUsername(username);
+    }
+
+    @CacheEvict(value = "usersOrdered", allEntries = true)
+    public void rankUpUser(User user) {
+        if(user.getCredits() >= 50) {
+            user.setCredits(user.getCredits() - 50);
+            user.setUserRank(user.getUserRank() + 1);
+            userRepository.save(user);
+        } else throw new DomainException("You need 50 credits to rank up!");
     }
 }
