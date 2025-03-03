@@ -9,6 +9,7 @@ import app.user.model.User;
 import app.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static app.constant.Constants.OFFENSE_UPGRADE_PRICE;
@@ -20,6 +21,7 @@ public class DefenseUpgradeService {
     private final DefenseUpgradeRepository defenseUpgradeRepository;
     private final UserRepository userRepository;
 
+    @Autowired
     public DefenseUpgradeService(DefenseUpgradeRepository defenseUpgradeRepository, UserRepository userRepository) {
         this.defenseUpgradeRepository = defenseUpgradeRepository;
         this.userRepository = userRepository;
