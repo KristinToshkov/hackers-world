@@ -1,0 +1,33 @@
+#main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#transaction-details {
+    display: flex;
+    flex-direction: column;
+    text-decoration-color: #00ff99;
+}
+
+
+.container h1, h2 {
+    color: #00ff99;
+}
+
+.container-large-users {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 7px;
+    height: fit-content;
+}
+
+.container {
+    height: fit-content;
+}
+
+.container-large {
+    margin-top: 0;
+}

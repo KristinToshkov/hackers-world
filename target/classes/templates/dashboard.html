@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/css/commons.css" />
+		<link rel="stylesheet" href="/css/dashboard.css" />
+	</head>
+	<body>
+
+	<th:block th:insert="fragments/menu :: menu"></th:block>
+
+
+			<div id="main">
+						<div class="container-large-users">
+							<div th:each="currentUser : ${allUsersExceptMe}" class="container">
+								<header>
+									<div id="profile-details">
+                <span class="image avatar48">
+                    <img th:src="${#strings.isEmpty(currentUser.profilePicture) ? 'images/default-avatar.png' : currentUser.profilePicture}" alt="Profile Picture"/>
+                </span>
+										<h1 id="title" th:text="${currentUser.username}">Username</h1>
+										<p th:text="'Rank: ' + ${currentUser.userRank}">Rank</p>
+									</div>
+									<div class="action-buttons">
+										<h2><a th:href="@{'/users/profile/' + ${currentUser.id}}">Edit</a></h2>
+										<h2 th:if="${currentUser.isActive()}">
+											<a th:href="@{'/users/ban/' + ${currentUser.id}}">Ban</a>
+										</h2>
+										<h2 th:if="${!currentUser.isActive()}" >
+											<a th:href="@{'/users/unban/' + ${currentUser.id}}" style="color: red">Unban</a>
+										</h2>
+										<h2 th:if="${currentUser.role == T(app.user.model.UserRole).USER}">
+											<a th:href="@{'/users/promote/' + ${currentUser.id}}">Promote</a>
+										</h2>
+										<h2 th:if="${currentUser.role == T(app.user.model.UserRole).ADMIN}" >
+											<a th:href="@{'/users/demote/' + ${currentUser.id}}" style="color: blue">Demote</a>
+										</h2>
+									</div>
+								</header>
+							</div>
+						</div>
+				<div class="container-large">
+					<header>
+						<div id="transaction-details">
+							<h1 id="title">Transactions</h1>
+							<div th:each="transaction : ${allTransactions}" class="container">
+								<h1 th:text="${'Id: ' + transaction.getId()}"></h1>
+								<h1 th:text="${'By: ' + transaction.getUser().username}"></h1>
+								<h1 th:text="${'Type: ' + transaction.getTransactionType()}"></h1>
+								<h2 th:text="${'Description: ' + transaction.getDescription()}"></h2>
+								<h1 th:text="${'For: ' + transaction.getCredits() + ' Credits'}"></h1>
+								<h2 th:text="${'Date: ' + transaction.getCreatedOn()}"></h2>
+							</div>
+						</div>
+					</header>
+				</div>
+                        
+			</div>
+
+	</body>
+</html>

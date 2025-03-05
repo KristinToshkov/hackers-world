@@ -17,7 +17,7 @@
                         
                                     <h2>Settings</h2>
                         
-                                    <form class="form" th:action="@{'/users/profile'}" th:method="PUT" th:object="${userEditRequest}">
+                                    <form class="form" th:action="@{'/users/profile/' + ${user.getId()}}" th:method="PUT" th:object="${userEditRequest}">
                         
                                         <div class="inputBox">
                     

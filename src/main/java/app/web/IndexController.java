@@ -3,6 +3,8 @@ package app.web;
 import app.message.WelcomeMessage;
 import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
+import app.transaction.model.Transaction;
+import app.transaction.service.TransactionService;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.LoginRequest;
@@ -28,10 +30,12 @@ import java.util.Random;
 public class IndexController {
 
     private final UserService userService;
+    private final TransactionService transactionService;
 
     @Autowired
-    public IndexController(UserService userService) {
+    public IndexController(UserService userService, TransactionService transactionService) {
         this.userService = userService;
+        this.transactionService = transactionService;
     }
 
     @GetMapping("/")
@@ -175,6 +179,26 @@ public class IndexController {
         modelAndView.setViewName("upgrades");
         User user = userService.getByUsername(authenticationMetadata.getUsername());
         modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
+    @GetMapping("/dashboard")
+    public ModelAndView getAdminPanel(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        User user = userService.getById(authenticationMetadata.getUserId());
+        if(!userService.isAdmin(user))
+        {
+            ModelAndView modelAndView = new ModelAndView("redirect:/home");
+            modelAndView.addObject("user", user);
+            return modelAndView;
+        }
+        List<User> allUsersExceptMe = userService.getAllUsersExceptMeFull(authenticationMetadata.getUsername());
+        List<Transaction> allTransactions = transactionService.getAllTransactions();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("dashboard");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("allUsersExceptMe", allUsersExceptMe);
+        modelAndView.addObject("allTransactions", allTransactions);
         return modelAndView;
     }
 }

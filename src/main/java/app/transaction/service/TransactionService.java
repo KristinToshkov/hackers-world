@@ -38,8 +38,7 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
-    @Cacheable("allTransactions")
     public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
+        return transactionRepository.findAllByOrderByCreatedOnDesc();
     }
 }

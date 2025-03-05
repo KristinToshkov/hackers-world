@@ -142,7 +142,14 @@ public class UserService implements UserDetailsService {
 
     @Cacheable("usersExceptMe")
     public List<User> getAllUsersExceptMe(String username) {
+        log.info("Contacted DB");
+        List<User> all = userRepository.findAllByisActiveTrue();
+        all.removeIf(u -> u.getUsername().equals(username));
+        return all;
 
+    }
+    @Cacheable("usersExceptMeFull")
+    public List<User> getAllUsersExceptMeFull(String username) {
         log.info("Contacted DB");
         List<User> all = userRepository.findAll();
         all.removeIf(u -> u.getUsername().equals(username));
@@ -150,8 +157,8 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public User getById(UUID id) {
 
+    public User getById(UUID id) {
         return userRepository.findById(id).orElseThrow(() -> new DomainException("User with id [%s] does not exist.".formatted(id)));
     }
 
@@ -206,6 +213,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    @CacheEvict(value = {"users", "usersOrdered", "usersExceptMe"}, allEntries = true)
     public void editUserDetails(@Valid UUID id, UserEditRequest userEditRequest) {
         Optional<User> byId = userRepository.findById(id);
         User user = byId.orElseThrow(() -> new DomainException("User with this username does not exist."));
@@ -247,5 +255,33 @@ public class UserService implements UserDetailsService {
             user.setUserRank(user.getUserRank() + 1);
             userRepository.save(user);
         } else throw new DomainException("You need 50 credits to rank up!");
+    }
+
+    public boolean isAdmin(User user) {
+        return user.getRole() == UserRole.ADMIN;
+    }
+
+    @CacheEvict(value = {"users", "usersOrdered", "usersExceptMe", "usersExceptMeFull"}, allEntries = true)
+    public void banUser(User user) {
+        user.setActive(false);
+        userRepository.save(user);
+    }
+
+    @CacheEvict(value = {"users", "usersOrdered", "usersExceptMe", "usersExceptMeFull"}, allEntries = true)
+    public void unbanUser(User user) {
+        user.setActive(true);
+        userRepository.save(user);
+    }
+
+    @CacheEvict(value = {"users", "usersOrdered", "usersExceptMe", "usersExceptMeFull"}, allEntries = true)
+    public void promoteUser(User user) {
+        user.setRole(UserRole.ADMIN);
+        userRepository.save(user);
+    }
+
+    @CacheEvict(value = {"users", "usersOrdered", "usersExceptMe", "usersExceptMeFull"}, allEntries = true)
+    public void demoteUser(User user) {
+        user.setRole(UserRole.USER);
+        userRepository.save(user);
     }
 }

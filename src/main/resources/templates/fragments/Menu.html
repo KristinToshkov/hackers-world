@@ -24,8 +24,11 @@
             <li><a href="/credits">Credits</a></li>
             <li><a href="/upgrades">Upgrades</a></li>
             <li><a href="/history">History</a></li>
-            <li><a th:href="@{'/users/' + ${user.id} + '/profile'}">Settings</a></li>
+            <li><a href="/users/profile">Settings</a></li>
             <li><a href="/scoreboard">Scoreboard</a></li>
+            <li th:if="${user.role == T(app.user.model.UserRole).ADMIN}">
+                <a href="/dashboard">Admin Panel</a>
+            </li>
             <li><a href="/logout">Logout</a></li>
         </ul>
     </nav>
