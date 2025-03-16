@@ -26,7 +26,7 @@ public class DailyBonus {
         this.userRepository = userRepository;
     }
 
-    @Scheduled(fixedDelay = 300000) // Presumable a delay of 24 hours, however for the sake of the demo I have set the delay of only 5 minutes :)
+    @Scheduled(fixedDelay = 300000) // Presumably a delay of 24 hours, however for the sake of the demo I have set the delay of only 5 minutes :)
     public void addCreditsToAllUsers() {
         List<User> allUsers = userRepository.findAll();
         for (User user : allUsers) {

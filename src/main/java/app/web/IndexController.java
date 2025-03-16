@@ -44,6 +44,14 @@ public class IndexController {
         return "index";
     }
 
+    @GetMapping("/darknet")
+    public ModelAndView getDarknetPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        User user = userService.getById(authenticationMetadata.getUserId());
+        ModelAndView modelAndView = new ModelAndView("darknet");
+        modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
     @GetMapping("/login")
     public ModelAndView getLoginPage(@RequestParam(value = "error", required = false) String errorParam) {
 
@@ -137,6 +145,7 @@ public class IndexController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("home");
         modelAndView.addObject("user", user);
+        log.info(user.getUsername());
 
         //Get a random welcoming message with each load of the home page
         WelcomeMessage[] values = WelcomeMessage.values();

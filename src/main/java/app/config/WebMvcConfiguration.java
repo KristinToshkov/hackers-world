@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -29,6 +30,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //         .anyRequest() - всички заявки, които не съм изброил
 //         .authenticated() - за да имаш достъп, трябва да си аутентикиран
         http
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF since you're using JSESSIONID
                 .authorizeHttpRequests(matchers -> matchers
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/", "/register", "/forgot-password").permitAll()
@@ -36,18 +38,18 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-//                        .usernameParameter("username")
-//                        .passwordParameter("password")
                         .defaultSuccessUrl("/home", true)
                         .failureUrl("/login?error")
-                        .permitAll())
+                        .permitAll()
+                )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            userService.logoutUser();  // Call method to clear cache
-                            response.sendRedirect("/");  // Redirect after clearing cache
+                            userService.logoutUser();
+                            response.sendRedirect("/");
                         })
                 );
+
 
         return http.build();
     }

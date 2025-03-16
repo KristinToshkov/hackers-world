@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Darknet Chat</title>
+  <link rel="stylesheet" href="/css/commons.css" />
+</head>
+<body>
+
+<!-- Include navigation menu -->
+<th:block th:insert="fragments/menu :: menu"></th:block>
+
+<h1>Welcome, <span id="username"></span></h1>
+
+<div id="messages">
+  <!-- Messages will be loaded here -->
+</div>
+
+<form id="chatForm">
+  <input type="text" id="messageInput" placeholder="Type a message..." required>
+  <button type="submit">Send</button>
+</form>
+
+</body>
+
+<script>
+  async function loadChatMessages() {
+    try {
+      const response = await fetch('/api/darknet');
+
+      if (!response.ok) throw new Error(`Server error: ${response.status}`);
+
+      const messages = await response.json(); // Expecting an array now
+      console.log("Messages received:", messages);
+
+      const messagesContainer = document.getElementById('messages');
+      messagesContainer.innerHTML = ''; // Clear previous messages
+
+      messages.forEach(msg => {
+        const messageElement = document.createElement('div');
+        messageElement.innerHTML = `<strong>${msg.author}:</strong> ${msg.message}`;
+        messagesContainer.appendChild(messageElement);
+      });
+
+    } catch (error) {
+      console.error("Error loading chat messages:", error);
+    }
+  }
+
+
+  document.getElementById("chatForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const formData = new URLSearchParams();
+    formData.append("message", document.getElementById("messageInput").value);
+
+    const response = await fetch("/api/darknet", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: formData
+    });
+
+    console.log("sending POST request");
+
+    if (response.ok) {
+      console.log("Message sent successfully!");
+    } else {
+      console.log("Failed to send message.");
+    }
+    document.getElementById("messageInput").value = "";
+    await loadChatMessages();
+  });
+
+
+
+  // Load messages when the page loads
+  document.addEventListener("DOMContentLoaded", loadChatMessages);
+</script>
+
+</html>
