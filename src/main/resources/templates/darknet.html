@@ -11,7 +11,7 @@
 <!-- Include navigation menu -->
 <th:block th:insert="fragments/menu :: menu"></th:block>
 
-<h1>Welcome, <span id="username"></span></h1>
+<h1>Remember agent, we will never ask for your password!</h1>
 
 <div id="messages">
   <!-- Messages will be loaded here -->
@@ -79,5 +79,70 @@
   // Load messages when the page loads
   document.addEventListener("DOMContentLoaded", loadChatMessages);
 </script>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 {
+    font-size: 2em;
+    text-shadow: 0 0 10px #00ff99;
+  }
+  #messages {
+    background-color: #111;
+    border: 2px solid #00ff99;
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.5);
+    height: 300px;
+    width: 80%;
+    max-width: 600px;
+    overflow-y: auto;
+    margin: 20px auto;
+    padding: 10px;
+    text-align: left;
+    border-radius: 8px;
+  }
+  #messages p {
+    padding: 8px;
+    border-bottom: 1px solid rgba(0, 255, 153, 0.2);
+  }
+
+  /* Chat Input */
+  #chatForm {
+    margin-top: 10px;
+
+  }
+
+  #messageInput {
+    width: 60%;
+    max-width: 500px;
+    padding: 10px;
+    font-size: 1.2em;
+    background: #222;
+    border: 2px solid #00ff99;
+    color: #00ff99;
+    outline: none;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* Send Button */
+  button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    background: #00ff99;
+    color: #0a0a0a;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+
+  button:hover {
+    background: #00cc77;
+    box-shadow: 0 0 10px #00ff99;
+  }
+</style>
 
 </html>
