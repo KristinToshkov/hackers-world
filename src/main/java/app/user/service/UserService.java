@@ -114,8 +114,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user1);
     }
 
-    // В началото се изпълнява веднъж този метод и резултата се пази в кеш
-    // Всяко следващо извикване на този метод ще се чете резултата от кеша и няма да се извиква четенето от базата
+
     @Cacheable("users")
     public List<User> getAllUsers() {
 
