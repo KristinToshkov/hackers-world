@@ -30,7 +30,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //         .anyRequest() - всички заявки, които не съм изброил
 //         .authenticated() - за да имаш достъп, трябва да си аутентикиран
         http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF since you're using JSESSIONID
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(matchers -> matchers
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/", "/register", "/forgot-password").permitAll()
