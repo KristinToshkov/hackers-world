@@ -20,6 +20,7 @@ public class Transaction {
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @Enumerated(EnumType.STRING)
